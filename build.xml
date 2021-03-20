@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE project>
+
+<!--
+//
+// EvoLudo Project
+//
+// Copyright 2010 Christoph Hauert
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//	http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+// For publications in any form, you are kindly requested to attribute the
+// author and project as follows:
+//
+//	Hauert, Christoph (<year>) EvoLudo Project, http://www.evoludo.org
+//			(doi: <doi>[, <version>])
+//
+//	<doi>:	digital object identifier of the downloaded release (or the
+//			most recent release if downloaded from github.com),
+//	<year>:	year of release (or download), and
+//	[, <version>]: optional version number (as reported in output header
+//			or GUI console) to simplify replication of reported results.
+//
+// The formatting may be adjusted to comply with publisher requirements.
+//
+//  -->
+
+<project name="EvoLudoLabs" default="sims" basedir="." >
+
+	<!-- Properties -->
+	<property name="src" value="src"/>
+	<property name="build" value="build"/>
+	<property environment="env"/>
+	<!-- default compiler arguments; debug mode: '-Xlint:all,-fallthrough', 'on', 'off', 'on' -->
+	<property name="compilerargs" value="-nowarn"/>
+	<!-- <property name="compilerargs" value="-Xlint:all,-fallthrough"/> -->
+	<property name="debug" value="off"/>
+	<property name="optimize" value="on"/>
+	<property name="listfiles" value="no"/>
+	
+	<!-- build simulations -->
+	<target name="sims" depends="init,core">
+		<property name="game" value="CSD"/>
+		<property name="main" value="scanCSD"/>
+		<echo message="Compiling ${main} with '${compilerargs}', optimize: ${optimize}, debug: ${debug}"/>
+		<javac srcdir="${src}"
+			   destdir="${build}"
+			   listfiles="${listfiles}"
+			   debug="${debug}" 
+			   optimize="${optimize}"
+			   includeAntRuntime="false" >
+			<include name="org/evoludo/simulator/lab/${game}.java"/>
+			<include name="org/evoludo/jre/simulator/run/${main}.java"/>
+			<include name="org/evoludo/jre/simulator/EvoLudoJRE.java"/>
+			<compilerarg line="${compilerargs}"/>
+		</javac>
+		<copy todir="${build}/org/evoludo/simulator">
+			<fileset dir="${src}/org/evoludo/simulator" includes="git.version"/>
+		</copy>
+
+		<jar destfile="${build}/${main}.jar" basedir="${build}" >
+			<manifest>
+				<attribute name="Built-By" value="${user.name}"/>
+				<attribute name="Main-Class" value="org.evoludo.jre.simulator.EvoLudoJRE"/>
+				<attribute name="Engine-Class" value="org.evoludo.jre.simulator.run.${main}"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="core">
+		<javac srcdir="${src}"
+			destdir="${build}" 
+			listfiles="${listfiles}" 
+			debug="${debug}" 
+			optimize="${optimize}"
+			includeAntRuntime="false" >
+			<include name="org/evoludo/simulator/EvoLudo.java"/>
+			<include name="org/evoludo/simulator/Population.java"/>
+			<include name="org/evoludo/simulator/CXPopulation.java"/>
+			<include name="org/evoludo/simulator/CPopulation.java"/>
+			<include name="org/evoludo/simulator/Group.java"/>
+			<include name="org/evoludo/simulator/Geometry.java"/>
+			<include name="org/evoludo/simulator/GeometryStorageListener.java"/>
+			<include name="org/evoludo/simulator/PopulationParser.java"/>
+			<include name="org/evoludo/simulator/EngineListener.java"/>
+			<include name="org/evoludo/simulator/Logger.java"/>
+			<include name="org/evoludo/simulator/util/ColorModel.java"/>
+			<include name="org/evoludo/util/ArrayMath.java"/>
+			<include name="org/evoludo/util/CLOParser.java"/>
+			<include name="org/evoludo/util/CLOProvider.java"/>
+			<include name="org/evoludo/util/CLOption.java"/>
+			<include name="org/evoludo/util/Combinatorics.java"/>
+			<include name="org/evoludo/util/Distributions.java"/>
+			<include name="org/evoludo/util/Formatter.java"/>
+			<include name="org/evoludo/util/MersenneTwister.java"/>
+			<include name="org/evoludo/util/PlistParser.java"/>
+			<include name="org/evoludo/util/PlistReader.java"/>
+			<include name="org/evoludo/util/PlistTag.java"/>
+			<include name="org/evoludo/util/XMLCoder.java"/>
+			<compilerarg line="${compilerargs}"/>
+		</javac>
+	</target>
+
+	<!-- Prepare build directories -->
+	<target name="init">
+		<mkdir dir="${build}"/>
+		<condition property="compilerargs" value="-Xlint:all,-fallthrough">
+			<equals arg1="${env.DEBUG}" arg2="debug"/>
+		</condition>
+		<condition property="debug" value="on">
+			<equals arg1="${env.DEBUG}" arg2="debug"/>
+		</condition>
+		<condition property="optimize" value="off">
+			<equals arg1="${env.DEBUG}" arg2="debug"/>
+		</condition>
+		<condition property="nostrip">
+			<equals arg1="${env.DEBUG}" arg2="debug"/>
+		</condition>
+		<condition property="listfiles" value="on">
+			<equals arg1="${env.DEBUG}" arg2="debug"/>
+		</condition>
+	</target>
+
+	<!-- Delete all the created directories -->
+	<target name="clean">
+		<delete dir="${build}"/>
+	</target>
+
+</project>
+
