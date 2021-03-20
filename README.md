@@ -2,6 +2,8 @@
 
 Diversification in spatial continuous games
 
+Individual-based simulations for modelling the effects of population structures on the spontaneous diversification into co-existing high and low investors in social dilemmas, which include the continuous analogues of the prisoner's dilemma and the snowdrift game.
+
 ## Build
 
 Run `ant` in this directory to build the jar-archive `build/scanCSD.jar`.
@@ -12,7 +14,7 @@ Change to the `simulations` directory and execute any of the scripts in your fav
 
 **Note:**
 * `fig 1.sh` uses the tool `prll` (see https://github.com/exzombie/prll) to manage and run simulations in parallel. 
-* some of the simulations require several days to complete
+* some of the simulations require several days to complete.
 
 ## EvoLudo
 
