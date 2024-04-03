@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/349778009.svg)](https://zenodo.org/doi/10.5281/zenodo.10910024)
+
 # IBS-DSCG
 
 Diversification in spatial continuous games
